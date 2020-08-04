@@ -1,5 +1,3 @@
-// extendable
-
 export class Firebase {
   constructor(app, config) {
     if (!config) throw new Error("No Firebase config given!");
@@ -29,6 +27,7 @@ export class Firebase {
           .then(async (snapshot) => {
             if (snapshot.exists) {
               const dbUser = snapshot.data();
+              // eslint-disable-next-line no-prototype-builtins
               if (!dbUser.hasOwnProperty("roles")) {
                 dbUser.roles = {
                   guest: true,

@@ -1,14 +1,15 @@
-import React, { Component, Fragment } from "react";
-import { withTheme } from "styled-components";
+import React, { Component, Fragment, createElement } from "react";
+import PropTypes from "prop-types";
 
 import getFirebase, { FirebaseContext } from "./Firebase";
 import { withAuthentication } from "./Session";
-//import Header from "./Header";
-//import Footer from "./Footer";
-//import Logo from "./Logo";
-//import GlobalStyle, { Centered } from "../styles/global";
 
-//import "bootstrap/dist/css/bootstrap.min.css";
+// eslint-disable-next-line react/prop-types
+let LayoutBase = ({ children }) => <Fragment>{children}</Fragment>;
+
+const AppWithAuthentication = withAuthentication(({ children }) => (
+  <LayoutBase>{children}</LayoutBase>
+));
 
 class Layout extends Component {
   state = {
@@ -25,7 +26,7 @@ class Layout extends Component {
     const functions = import("firebase/functions");
 
     Promise.all([app, auth, firestore, storage, functions]).then((values) => {
-      const firebase = getFirebase(values[0]);
+      const firebase = getFirebase(values[0], this.props.firebaseConfig);
 
       this.setState({ firebase });
     });
@@ -39,18 +40,13 @@ class Layout extends Component {
   }
 
   render() {
-    if (this.state.hasError)
+    if (this.state.error)
       return (
         <LayoutBase>
-          <div>
-            <h1>Uh oh!</h1>
-            <p>Something went wrong!</p>
-            <details style={{ whiteSpace: "pre-wrap" }}>
-              {this.state.error && this.state.error.toString()}
-              <br />
-              {this.state.errorInfo.componentStack}
-            </details>
-          </div>
+          {createElement(this.props.errorComponent, {
+            error: this.state.error,
+            errorInfo: this.state.errorInfo,
+          })}
         </LayoutBase>
       );
 
@@ -62,14 +58,29 @@ class Layout extends Component {
   }
 }
 
-const LayoutBase = withTheme(({ theme, children }) => (
-  <Fragment>
-    {children}
-  </Fragment>
-));
+Layout.propTypes = {
+  firebaseConfig: PropTypes.object.isRequired,
+  errorComponent: PropTypes.func,
+};
 
-const AppWithAuthentication = withAuthentication(({ children }) => (
-  <LayoutBase>{children}</LayoutBase>
-));
+Layout.defaultProps = {
+  // eslint-disable-next-line react/display-name, react/prop-types
+  errorComponent: ({ error, errorInfo }) => (
+    <div>
+      <h1>Uh oh!</h1>
+      <p>Something went wrong!</p>
+      <details style={{ whiteSpace: "pre-wrap" }}>
+        {error && error.toString()}
+        <br />
+        {/* eslint-disable-next-line react/prop-types */}
+        {errorInfo.componentStack}
+      </details>
+    </div>
+  ),
+};
+
+export const setLayoutBase = (Component) => {
+  LayoutBase = Component;
+};
 
 export default Layout;

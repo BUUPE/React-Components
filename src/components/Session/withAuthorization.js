@@ -54,10 +54,10 @@ WithAuthorization.propTypes = {
   authorizationFailed: PropTypes.element.isRequired,
 };
 
-let Wrapper = WithAuthorization;
+let WithAuthorizationWrapper = WithAuthorization;
 const withAuthorization = (condition) => (Component) =>
-  withFirebase(<Wrapper />);
-const setWrapper = (Component) => {
-  Wrapper = Component;
+  withFirebase(<WithAuthorizationWrapper />);
+export const setWithAuthorizationWrapper = (Component) => {
+  WithAuthorizationWrapper = Component;
 }; // call this early
 export default withAuthorization;
