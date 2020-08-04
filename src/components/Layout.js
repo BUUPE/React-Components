@@ -3,12 +3,12 @@ import { withTheme } from "styled-components";
 
 import getFirebase, { FirebaseContext } from "./Firebase";
 import { withAuthentication } from "./Session";
-import Header from "./Header";
-import Footer from "./Footer";
-import Logo from "./Logo";
-import GlobalStyle, { Centered } from "../styles/global";
+//import Header from "./Header";
+//import Footer from "./Footer";
+//import Logo from "./Logo";
+//import GlobalStyle, { Centered } from "../styles/global";
 
-import "bootstrap/dist/css/bootstrap.min.css";
+//import "bootstrap/dist/css/bootstrap.min.css";
 
 class Layout extends Component {
   state = {
@@ -42,8 +42,7 @@ class Layout extends Component {
     if (this.state.hasError)
       return (
         <LayoutBase>
-          <Centered>
-            <Logo size="medium" />
+          <div>
             <h1>Uh oh!</h1>
             <p>Something went wrong!</p>
             <details style={{ whiteSpace: "pre-wrap" }}>
@@ -51,7 +50,7 @@ class Layout extends Component {
               <br />
               {this.state.errorInfo.componentStack}
             </details>
-          </Centered>
+          </div>
         </LayoutBase>
       );
 
@@ -65,10 +64,7 @@ class Layout extends Component {
 
 const LayoutBase = withTheme(({ theme, children }) => (
   <Fragment>
-    <GlobalStyle theme={theme} />
-    <Header />
     {children}
-    <Footer />
   </Fragment>
 ));
 

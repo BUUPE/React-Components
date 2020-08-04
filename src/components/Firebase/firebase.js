@@ -1,7 +1,9 @@
 // extendable
 
-class Firebase {
+export class Firebase {
   constructor(app, config) {
+    if (!config) throw new Error("No Firebase config given!");
+
     app.initializeApp(config);
     this.auth = app.auth();
     this.firestore = app.firestore();
@@ -12,6 +14,11 @@ class Firebase {
 
   doSignOut = () =>
     this.auth.signOut().then(() => localStorage.removeItem("authUser"));
+
+  getIdToken = () => {
+    if (this.auth.currentUser) return this.auth.currentUser.getIdToken();
+    else return new Promise((resolve) => resolve(null));
+  };
 
   // *** Merge Auth and DB User API ***
   onAuthUserListener = (next, fallback) =>
