@@ -60,7 +60,7 @@ const withAuthentication = (Component) => {
   }
 
   WithAuthentication.propTypes = {
-    firebase: PropTypes.instanceOf(Firebase).isRequired,
+    firebase: PropTypes.instanceOf(Firebase),
   };
 
   return withFirebase(WithAuthentication);

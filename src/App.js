@@ -1,6 +1,6 @@
 import React from "react";
 import { hot } from "react-hot-loader";
-import Layout, { setLayoutBase } from "./components/Layout";
+import { Layout } from "./components";
 
 const config = {
   apiKey: "AIzaSyBxBIbTYbRuqP1np-ri4YaJ0H6OYK4L46g",
@@ -35,12 +35,12 @@ class BuggyCounter extends React.Component {
   }
 }
 
-setLayoutBase(({ children }) => (
+/*setLayoutBase(({ children }) => (
   <div>
     <strong>This is a custom layout base!</strong>
     {children}
   </div>
-));
+));*/
 
 const App = () => (
   <Layout firebaseConfig={config}>

@@ -103,3 +103,4 @@ dist
 # docs
 .docz
 docz-build
+build
