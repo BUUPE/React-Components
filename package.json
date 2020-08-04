@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "A library of common React components used throughout our applications.",
   "main": "src/index.js",
+  "files": "build",
   "scripts": {
     "start": "webpack-dev-server --mode development --open",
     "build": "webpack --mode production",
@@ -30,7 +31,7 @@
     "type": "git",
     "url": "git+https://github.com/BUUPE/React-Components.git"
   },
-  "author": "",
+  "author": "Rudhra Raveendran",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/BUUPE/React-Components/issues"
