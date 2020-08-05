@@ -52,13 +52,16 @@ const withAuthentication = (Component) => {
     render() {
       return (
         <AuthUserContext.Provider value={this.state.authUser}>
-          <Component {...this.props} />
+          <Component>{this.props.children}</Component>
         </AuthUserContext.Provider>
       );
     }
   }
 
+  WithAuthentication.displayName = "WithAuthentication";
+
   WithAuthentication.propTypes = {
+    children: PropTypes.node.isRequired,
     firebase: PropTypes.instanceOf(Firebase),
   };
 

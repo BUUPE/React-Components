@@ -6,10 +6,13 @@ import { withAuthentication } from "./Session";
 
 // eslint-disable-next-line react/prop-types
 let LayoutBase = ({ children }) => <Fragment>{children}</Fragment>;
+LayoutBase.displayName = "LayoutBase";
 
 const AppWithAuthentication = withAuthentication(({ children }) => (
   <LayoutBase>{children}</LayoutBase>
 ));
+
+AppWithAuthentication.displayName = "AppWithAuthentication";
 
 class Layout extends Component {
   state = {
@@ -26,7 +29,7 @@ class Layout extends Component {
     const functions = import("firebase/functions");
 
     Promise.all([app, auth, firestore, storage, functions]).then((values) => {
-      const firebase = getFirebase(values[0], this.props.firebaseConfig);
+      const firebase = getFirebase(values[0]);
 
       this.setState({ firebase });
     });
@@ -52,16 +55,18 @@ class Layout extends Component {
 
     return (
       <FirebaseContext.Provider value={this.state.firebase}>
-        <AppWithAuthentication {...this.props} />
+        <AppWithAuthentication>{this.props.children}</AppWithAuthentication>
       </FirebaseContext.Provider>
     );
   }
 }
 
 Layout.propTypes = {
-  firebaseConfig: PropTypes.object.isRequired,
+  children: PropTypes.node.isRequired,
   errorComponent: PropTypes.func,
 };
+
+Layout.displayName = "Layout";
 
 Layout.defaultProps = {
   // eslint-disable-next-line react/display-name, react/prop-types

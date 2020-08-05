@@ -32,15 +32,10 @@ export class WithAuthorizationClass extends Component {
   }
 
   render() {
-    return (
-      <AuthUserContext.Consumer>
-        {(authUser) =>
-          this.props.condition(authUser)
-            ? createElement(this.props.authorizationPassed, { ...this.props })
-            : this.props.authorizationFailed
-        }
-      </AuthUserContext.Consumer>
-    );
+    const authUser = this.context;
+    return this.props.condition(authUser)
+      ? createElement(this.props.authorizationPassed, { ...this.props })
+      : this.props.authorizationFailed;
   }
 }
 

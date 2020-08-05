@@ -78,13 +78,17 @@ class Firebase {
 }
 
 let firebase;
-
-export const getFirebase = (app, config) => {
+let firebaseClass = Firebase;
+export const getFirebase = (app) => {
   if (!firebase) {
-    firebase = new Firebase(app, config);
+    firebase = new firebaseClass(app);
   }
 
   return firebase;
+};
+
+export const setFirebaseClass = (newClass) => {
+  firebaseClass = newClass;
 };
 
 export default Firebase;

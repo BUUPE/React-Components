@@ -1,5 +1,5 @@
 {
-  "name": "react-components",
+  "name": "upe-react-components",
   "version": "1.0.0",
   "description": "A library of common React components used throughout our applications.",
   "main": "build/index.js",
@@ -51,15 +51,16 @@
     "lint-staged": "^10.2.11",
     "neutrino": "^9.3.0",
     "prettier": "^2.0.5",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
     "webpack": "^4.44.1",
     "webpack-cli": "^3.3.12",
     "webpack-dev-server": "^3.11.0"
   },
   "dependencies": {
+    "@hot-loader/react-dom": "^16.13.0",
     "core-js": "3",
     "firebase": "^7.17.1",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
     "react-hot-loader": "^4.12.21",
     "source-map-support": "^0.5.19",
     "styled-components": "^5.1.1"
