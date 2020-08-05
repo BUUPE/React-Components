@@ -1,14 +1,19 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useContext } from "react";
 import { hot } from "react-hot-loader";
 import Layout, { setLayoutBase } from "./components/Layout";
 import {
   withAuthorization,
   setWithAuthorizationWrapper,
   WithAuthorizationClass,
+  AuthUserContext,
 } from "./components/Session";
 import { withFirebase } from "./components/Firebase";
 
-const test = <h1>Unauthorized</h1>;
+const test = (
+  <div>
+    <h1>Unauthorized</h1>
+  </div>
+);
 setWithAuthorizationWrapper((props) => (
   <WithAuthorizationClass
     {...props}
@@ -59,20 +64,33 @@ setLayoutBase(({ children }) => (
 ));
 
 const Login = withFirebase(({ firebase }) => {
+  const authUser = useContext(AuthUserContext);
   useEffect(() => {
-    if (firebase) {
+    if (firebase && !authUser) {
       const queryString = window.location.search;
       const urlParams = new URLSearchParams(queryString);
       const token = urlParams.get("token");
       if (token) {
-        firebase.doSignInWithToken(token).then(() => console.log("signed in"));
+        firebase
+          .doSignInWithToken(token)
+          .then(() => window.history.pushState({}, document.title, "/"));
       } else {
-        window.location.href = "https://upe-authenticator.herokuapp.com/";
+        setTimeout(
+          () =>
+            (window.location.href = "https://upe-authenticator.herokuapp.com/"),
+          3000
+        );
       }
     }
-  }, [firebase]);
+  }, [firebase, authUser]);
 
-  return <p>i do the thing</p>;
+  const handleLogout = () => firebase.doSignOut();
+
+  return authUser ? (
+    <button onClick={handleLogout}>logout</button>
+  ) : (
+    <h3>gonna log u in</h3>
+  );
 });
 
 const App = () => (
@@ -84,7 +102,7 @@ const App = () => (
   </Layout>
 );
 
-const Special = <h1>Im secret</h1>;
+const Special = () => <h1>Im secret</h1>;
 const condition = (authUser) => !!authUser;
 const Authorized = withAuthorization(condition)(Special);
 export default hot(module)(App);
