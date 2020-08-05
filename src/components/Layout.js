@@ -1,7 +1,7 @@
 import React, { Component, Fragment, createElement } from "react";
 import PropTypes from "prop-types";
 
-import getFirebase, { FirebaseContext } from "./Firebase";
+import { FirebaseContext, getFirebase } from "./Firebase";
 import { withAuthentication } from "./Session";
 
 // eslint-disable-next-line react/prop-types

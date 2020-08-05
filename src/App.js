@@ -1,6 +1,22 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { hot } from "react-hot-loader";
-import { Layout } from "./components";
+import Layout, { setLayoutBase } from "./components/Layout";
+import {
+  withAuthorization,
+  setWithAuthorizationWrapper,
+  WithAuthorizationClass,
+} from "./components/Session";
+import { withFirebase } from "./components/Firebase";
+
+const test = <h1>Unauthorized</h1>;
+setWithAuthorizationWrapper((props) => (
+  <WithAuthorizationClass
+    {...props}
+    firebaseAuthNext={(authUser) => console.log("authUser", authUser)}
+    firebaseAuthFallback={() => console.log("doing fallback")}
+    authorizationFailed={test}
+  />
+));
 
 const config = {
   apiKey: "AIzaSyBxBIbTYbRuqP1np-ri4YaJ0H6OYK4L46g",
@@ -35,18 +51,40 @@ class BuggyCounter extends React.Component {
   }
 }
 
-/*setLayoutBase(({ children }) => (
+setLayoutBase(({ children }) => (
   <div>
     <strong>This is a custom layout base!</strong>
     {children}
   </div>
-));*/
+));
+
+const Login = withFirebase(({ firebase }) => {
+  useEffect(() => {
+    if (firebase) {
+      const queryString = window.location.search;
+      const urlParams = new URLSearchParams(queryString);
+      const token = urlParams.get("token");
+      if (token) {
+        firebase.doSignInWithToken(token).then(() => console.log("signed in"));
+      } else {
+        window.location.href = "https://upe-authenticator.herokuapp.com/";
+      }
+    }
+  }, [firebase]);
+
+  return <p>i do the thing</p>;
+});
 
 const App = () => (
   <Layout firebaseConfig={config}>
     <h1>Hello World!</h1>
     <BuggyCounter />
+    <Login />
+    <Authorized />
   </Layout>
 );
 
+const Special = <h1>Im secret</h1>;
+const condition = (authUser) => !!authUser;
+const Authorized = withAuthorization(condition)(Special);
 export default hot(module)(App);

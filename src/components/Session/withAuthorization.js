@@ -1,13 +1,12 @@
-import React, { cloneElement } from "react";
+import React, { Component, createElement } from "react";
 import PropTypes from "prop-types";
 
 import AuthUserContext from "./context";
-import { withFirebase } from "../Firebase/context";
-import { Firebase } from "../Firebase/firebase";
+import Firebase, { withFirebase } from "../Firebase";
 
-// wrap this in something that passes down the wrops and send that to generateWithAuthorization
-class WithAuthorization extends React.Component {
+export class WithAuthorizationClass extends Component {
   _initFirebase = false;
+  static contextType = AuthUserContext;
 
   firebaseInit = () => {
     if (this.props.firebase && !this._initFirebase) {
@@ -37,7 +36,7 @@ class WithAuthorization extends React.Component {
       <AuthUserContext.Consumer>
         {(authUser) =>
           this.props.condition(authUser)
-            ? cloneElement(this.props.authorizationPassed, { ...this.props })
+            ? createElement(this.props.authorizationPassed, { ...this.props })
             : this.props.authorizationFailed
         }
       </AuthUserContext.Consumer>
@@ -45,19 +44,35 @@ class WithAuthorization extends React.Component {
   }
 }
 
-WithAuthorization.propTypes = {
-  firebase: PropTypes.instanceOf(Firebase).isRequired,
+WithAuthorizationClass.propTypes = {
+  firebase: PropTypes.instanceOf(Firebase),
   firebaseAuthNext: PropTypes.func.isRequired,
   firebaseAuthFallback: PropTypes.func.isRequired,
   condition: PropTypes.func.isRequired,
-  authorizationPassed: PropTypes.element.isRequired,
-  authorizationFailed: PropTypes.element.isRequired,
+  authorizationPassed: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.element,
+    PropTypes.elementType,
+  ]).isRequired,
+  authorizationFailed: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.element,
+    PropTypes.elementType,
+  ]).isRequired,
 };
 
-let WithAuthorizationWrapper = WithAuthorization;
-const withAuthorization = (condition) => (Component) =>
-  withFirebase(<WithAuthorizationWrapper />);
+let WithAuthorizationWrapper = (props) => <WithAuthorizationClass {...props} />;
 export const setWithAuthorizationWrapper = (Component) => {
   WithAuthorizationWrapper = Component;
-}; // call this early
+};
+
+const withAuthorization = (condition) => (Component) => {
+  const withcondition = () => (
+    <WithAuthorizationWrapper
+      condition={condition}
+      authorizationPassed={Component}
+    />
+  );
+  return withFirebase(withcondition);
+};
 export default withAuthorization;

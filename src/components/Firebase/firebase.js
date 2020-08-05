@@ -1,4 +1,4 @@
-export class Firebase {
+class Firebase {
   constructor(app, config) {
     if (!config) throw new Error("No Firebase config given!");
 
@@ -73,13 +73,13 @@ export class Firebase {
     });
 
   // *** User API ***
-  user = (uid) => this.firestoreRoot.doc(`users/${uid}`);
-  users = () => this.firestoreRoot.collection("users");
+  user = (uid) => this.firestore.doc(`users/${uid}`);
+  users = () => this.firestore.collection("users");
 }
 
 let firebase;
 
-const getFirebase = (app, config) => {
+export const getFirebase = (app, config) => {
   if (!firebase) {
     firebase = new Firebase(app, config);
   }
@@ -87,4 +87,4 @@ const getFirebase = (app, config) => {
   return firebase;
 };
 
-export default getFirebase;
+export default Firebase;
