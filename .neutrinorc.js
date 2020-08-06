@@ -4,6 +4,7 @@ module.exports = {
   use: [reactComponents(),
   (neutrino) => {
      neutrino.config.output.library("upe-react-components");
+     neutrino.config.output.globalObject("this");
 
      // we only want the index for now
      const index = neutrino.config.entryPoints.get("index");
