@@ -34,10 +34,11 @@ export class WithAuthorizationClass extends Component {
   render() {
     const authUser = this.context;
     return this.props.condition(authUser)
-      ? createElement(this.props.authorizationPassed, { ...this.props })
+      ? createElement(this.props.authorizationPassed)
       : this.props.authorizationFailed;
   }
 }
+WithAuthorizationClass.displayName = "WithAuthorizationClass";
 
 WithAuthorizationClass.propTypes = {
   firebase: PropTypes.instanceOf(Firebase),
@@ -62,12 +63,16 @@ export const setWithAuthorizationWrapper = (Component) => {
 };
 
 const withAuthorization = (condition) => (Component) => {
-  const withcondition = () => (
+  // eslint-disable-next-line react/prop-types
+  const WithCondition = ({ firebase }) => (
     <WithAuthorizationWrapper
       condition={condition}
       authorizationPassed={Component}
+      firebase={firebase}
     />
   );
-  return withFirebase(withcondition);
+  WithCondition.displayName = "WithCondition";
+
+  return withFirebase(WithCondition);
 };
 export default withAuthorization;
