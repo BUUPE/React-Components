@@ -62,7 +62,6 @@
     "core-js": "3",
     "firebase": "^7.17.1",
     "react-hot-loader": "^4.12.21",
-    "source-map-support": "^0.5.19",
     "styled-components": "^5.1.1"
   }
 }
