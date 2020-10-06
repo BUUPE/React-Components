@@ -16,10 +16,10 @@
   },
   "lint-staged": {
     "src/**/*.{js,jsx}": [
-      "yarn lint"
+      "eslint --max-warnings=0"
     ],
     "src/**/*.{js,jsx,json,md,mdx}": [
-      "yarn format"
+      "prettier --write"
     ]
   },
   "husky": {
@@ -61,6 +61,7 @@
     "@hot-loader/react-dom": "^16.13.0",
     "core-js": "3",
     "firebase": "^7.17.1",
+    "lodash.omit": "^4.5.0",
     "react-hot-loader": "^4.12.21",
     "styled-components": "^5.1.1"
   }

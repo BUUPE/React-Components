@@ -1,5 +1,6 @@
 import React, { Component, createElement } from "react";
 import PropTypes from "prop-types";
+import omit from "lodash.omit";
 
 import AuthUserContext from "./context";
 import Firebase, { withFirebase } from "../Firebase";
@@ -33,8 +34,16 @@ export class WithAuthorizationClass extends Component {
 
   render() {
     const authUser = this.context;
+    const filteredProps = omit(this.props, [
+      "firebase",
+      "firebaseAuthNext",
+      "firebaseAuthFallback",
+      "condition",
+      "authorizationPassed",
+      "authorizationFailed",
+    ]);
     return this.props.condition(authUser)
-      ? createElement(this.props.authorizationPassed)
+      ? createElement(this.props.authorizationPassed, filteredProps)
       : this.props.authorizationFailed;
   }
 }
@@ -64,11 +73,11 @@ export const setWithAuthorizationWrapper = (Component) => {
 
 const withAuthorization = (condition) => (Component) => {
   // eslint-disable-next-line react/prop-types
-  const WithCondition = ({ firebase }) => (
+  const WithCondition = (props) => (
     <WithAuthorizationWrapper
       condition={condition}
       authorizationPassed={Component}
-      firebase={firebase}
+      {...props}
     />
   );
   WithCondition.displayName = "WithCondition";
